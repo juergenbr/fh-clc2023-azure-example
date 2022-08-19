@@ -68,15 +68,16 @@ public class Function {
 
     public void upload(byte[] content, String fileName) {
         try {
+          String containerName = System.getenv("CONTAINERNAME");
             BlobClientProvider provider = new BlobClientProvider(logger);
             BlobServiceClient blobServiceClient = provider.getBlobServiceClient();
-            BlobContainerClient container = blobServiceClient.createBlobContainerIfNotExists(System.getenv("CONTAINERNAME"));
+            BlobContainerClient container = blobServiceClient.createBlobContainerIfNotExists(containerName);
             BlobClient blobClient = provider.getBlobClient(container.getBlobContainerName(), fileName);
-            logger.info("\n\tUpload a file as a block blob.");
+            logger.info("\n\tUploading" + fileName + " to container " + containerName);
             blobClient.upload(BinaryData.fromBytes(content), true);
             logger.info("\t\tSuccessfully uploaded the blob.");
-        } catch (Throwable e) {
-            logger.log(Level.SEVERE, "Java HTTP trigger processed a request.", e.fillInStackTrace());
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Failed uploading file.", e.fillInStackTrace());
         }
     }
 }
