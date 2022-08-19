@@ -4,7 +4,7 @@ param location string
 
 var workflows_fh_clc3_logicapp_name = 'fh-clc3-logicapp'
 
-resource workflows_fh_clc3_logicapp_name_resource 'Microsoft.Logic/workflows@2017-07-01' = {
+resource workflows_fh_clc3_logicapp_name_resource 'Microsoft.Logic/workflows@2019-05-01' = {
   name: workflows_fh_clc3_logicapp_name
   location: location
   identity: {

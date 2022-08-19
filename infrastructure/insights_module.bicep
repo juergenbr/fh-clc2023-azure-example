@@ -346,3 +346,5 @@ resource smartdetectoralertrules_failure_anomalies_fh_clc3_example_name_resource
     }
   }
 }
+
+output appInsights_name string = components_fh_clc3_example_name

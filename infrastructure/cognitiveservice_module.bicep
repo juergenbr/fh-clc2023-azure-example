@@ -5,7 +5,6 @@ var accounts_fhclc3excompvis_name = 'fhclc3excompvis'
 resource connections_cognitiveservicescomputervision_name_resource 'Microsoft.Web/connections@2016-06-01' = {
   name: connections_cognitiveservicescomputervision_name
   location: location
-  kind: 'V1'
   properties: {
     displayName: 'fh-clc3-compvision-key'
     statuses: [
@@ -28,14 +27,18 @@ resource connections_cognitiveservicescomputervision_name_resource 'Microsoft.We
     }
     testLinks: [
       {
-        requestUri: 'https://management.azure.com:443/subscriptions/c0a97786-cce2-4cf3-9f1a-022e775c19ad/resourceGroups/rg-fh-clc3-example/providers/Microsoft.Web/connections/${connections_cognitiveservicescomputervision_name}/extensions/proxy/vision/v2.0/models?api-version=2016-06-01'
+        requestUri: '${environment().resourceManager}:443/subscriptions/c0a97786-cce2-4cf3-9f1a-022e775c19ad/resourceGroups/rg-fh-clc3-example/providers/Microsoft.Web/connections/${connections_cognitiveservicescomputervision_name}/extensions/proxy/vision/v2.0/models?api-version=2016-06-01'
         method: 'get'
       }
     ]
   }
 }
 
-resource accounts_fhclc3excompvis_name_resource 'Microsoft.CognitiveServices/accounts@2022-03-01' = {
+resource computervision_free 'Microsoft.CognitiveServices/accounts@2022-03-01' existing = {
+  name: accounts_fhclc3excompvis_name
+}
+
+resource accounts_fhclc3excompvis_name_resource 'Microsoft.CognitiveServices/accounts@2022-03-01' = if(null == computervision_free.name) {
   name: accounts_fhclc3excompvis_name
   location: location
   sku: {

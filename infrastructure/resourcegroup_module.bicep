@@ -4,6 +4,8 @@ param connections_ascalert_name string = 'ascalert'
 param connections_azureblob_name string = 'azureblob'
 param location string = 'westeurope'
 
+var contentshare_name = 'functioncontentshare'
+
 module insights_module 'insights_module.bicep' = {
   name: 'insights_module'
   params: {
@@ -15,6 +17,7 @@ module storage_module 'storage_module.bicep' = {
   name: 'storage_module'
   params: {
     location: location
+    functionContentShareName: contentshare_name
   }
 }
 
@@ -38,13 +41,16 @@ module function_module 'function_module.bicep' = {
   name: 'function_module'
   params: {
     location: location
+    storageaccount_name: storage_module.outputs.storageaccount_name
+    container_name: storage_module.outputs.storageAccounts_jbclc3examplestorage_name_default_imageanalysis
+    appInsights_name: insights_module.outputs.appInsights_name
+    contentshare_name: contentshare_name
   }
 }
 
 resource connections_ascalert_name_resource 'Microsoft.Web/connections@2016-06-01' = {
   name: connections_ascalert_name
   location: location
-  kind: 'V1'
   properties: {
     displayName: 'Microsoft Defender for Cloud Alert'
     statuses: [
@@ -74,7 +80,6 @@ resource connections_ascalert_name_resource 'Microsoft.Web/connections@2016-06-0
 resource connections_azureblob_name_resource 'Microsoft.Web/connections@2016-06-01' = {
   name: connections_azureblob_name
   location: location
-  kind: 'V1'
   properties: {
     displayName: 'fh-clc3-example-connection'
     statuses: [
@@ -97,7 +102,7 @@ resource connections_azureblob_name_resource 'Microsoft.Web/connections@2016-06-
     }
     testLinks: [
       {
-        requestUri: 'https://management.azure.com:443/subscriptions/c0a97786-cce2-4cf3-9f1a-022e775c19ad/resourceGroups/rg-fh-clc3-example/providers/Microsoft.Web/connections/${connections_azureblob_name}/extensions/proxy/testconnection?api-version=2016-06-01'
+        requestUri: '${environment().resourceManager}:443/subscriptions/c0a97786-cce2-4cf3-9f1a-022e775c19ad/resourceGroups/rg-fh-clc3-example/providers/Microsoft.Web/connections/${connections_azureblob_name}/extensions/proxy/testconnection?api-version=2016-06-01'
         method: 'get'
       }
     ]

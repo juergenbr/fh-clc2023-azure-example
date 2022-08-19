@@ -15,13 +15,13 @@ import java.util.logging.Logger;
  */
 public class BlobClientProvider {
 
-  private String storageAccountUrl = "https://jbclc3examplestorage.blob.core.windows.net/";
+  private String storageAccountUrl = "https://" + System.getenv("STORAGEACCOUNT_NAME") + ".blob.core.windows.net/";
   private DefaultAzureCredential defaultCredential;
   private Logger logger;
 
 
   public BlobClientProvider(Logger logger) {
-    defaultCredential = new DefaultAzureCredentialBuilder().build();
+    this.defaultCredential = new DefaultAzureCredentialBuilder().build();
     this.logger = logger;
     logger.info("\n\tDefaultAzureCredential created.");
   }
@@ -42,12 +42,11 @@ public class BlobClientProvider {
    * Create new BlobClient using ManagedIdentity authentication.
    */
   public BlobClient getBlobClient(String containerName, String blobName) {
-    DefaultAzureCredential defaultCredential = new DefaultAzureCredentialBuilder().build();
     BlobClient client = new BlobClientBuilder()
         .endpoint(storageAccountUrl)
         .containerName(containerName)
         .blobName(blobName)
-        .credential(defaultCredential)
+        .credential(this.defaultCredential)
         .buildClient();
     return client;
   }

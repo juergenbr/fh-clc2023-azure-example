@@ -1,6 +1,18 @@
 param location string
-var sites_fh_clc3_example_name = 'fh-clc3-example'
+param storageaccount_name string
+param container_name string
+param appInsights_name string
+param contentshare_name string
+var sites_fh_clc3_example_name = 'fh-clc3-${uniqueString(resourceGroup().id)}'
 var serverfarms_ASP_rgfhclc3example_b5db_name = 'ASP-rgfhclc3example-b5db'
+
+resource storageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
+  name: storageaccount_name
+}
+
+resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
+  name: appInsights_name
+}
 
 resource serverfarms_ASP_rgfhclc3example_b5db_name_resource 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: serverfarms_ASP_rgfhclc3example_b5db_name
@@ -30,11 +42,6 @@ resource serverfarms_ASP_rgfhclc3example_b5db_name_resource 'Microsoft.Web/serve
 resource sites_fh_clc3_example_name_resource 'Microsoft.Web/sites@2022-03-01' = {
   name: sites_fh_clc3_example_name
   location: location
-  tags: {
-    'hidden-link: /app-insights-resource-id': '/subscriptions/c0a97786-cce2-4cf3-9f1a-022e775c19ad/resourceGroups/rg-fh-clc3-example/providers/microsoft.insights/components/fh-clc3-example'
-    'hidden-link: /app-insights-instrumentation-key': '4f49708e-7854-4491-92f1-317950e3d193'
-    'hidden-link: /app-insights-conn-string': 'InstrumentationKey=4f49708e-7854-4491-92f1-317950e3d193;IngestionEndpoint=https://westeurope-5.in.applicationinsights.azure.com/;LiveEndpoint=https://westeurope.livediagnostics.monitor.azure.com/'
-  }
   kind: 'functionapp,linux'
   identity: {
     type: 'SystemAssigned'
@@ -82,43 +89,9 @@ resource sites_fh_clc3_example_name_resource 'Microsoft.Web/sites@2022-03-01' = 
   }
 }
 
-resource sites_fh_clc3_example_name_ftp 'Microsoft.Web/sites/basicPublishingCredentialsPolicies@2022-03-01' = {
-  parent: sites_fh_clc3_example_name_resource
-  name: 'ftp'
-  location: location
-  tags: {
-    'hidden-link: /app-insights-resource-id': '/subscriptions/c0a97786-cce2-4cf3-9f1a-022e775c19ad/resourceGroups/rg-fh-clc3-example/providers/microsoft.insights/components/fh-clc3-example'
-    'hidden-link: /app-insights-instrumentation-key': '4f49708e-7854-4491-92f1-317950e3d193'
-    'hidden-link: /app-insights-conn-string': 'InstrumentationKey=4f49708e-7854-4491-92f1-317950e3d193;IngestionEndpoint=https://westeurope-5.in.applicationinsights.azure.com/;LiveEndpoint=https://westeurope.livediagnostics.monitor.azure.com/'
-  }
-  properties: {
-    allow: true
-  }
-}
-
-resource sites_fh_clc3_example_name_scm 'Microsoft.Web/sites/basicPublishingCredentialsPolicies@2022-03-01' = {
-  parent: sites_fh_clc3_example_name_resource
-  name: 'scm'
-  location: location
-  tags: {
-    'hidden-link: /app-insights-resource-id': '/subscriptions/c0a97786-cce2-4cf3-9f1a-022e775c19ad/resourceGroups/rg-fh-clc3-example/providers/microsoft.insights/components/fh-clc3-example'
-    'hidden-link: /app-insights-instrumentation-key': '4f49708e-7854-4491-92f1-317950e3d193'
-    'hidden-link: /app-insights-conn-string': 'InstrumentationKey=4f49708e-7854-4491-92f1-317950e3d193;IngestionEndpoint=https://westeurope-5.in.applicationinsights.azure.com/;LiveEndpoint=https://westeurope.livediagnostics.monitor.azure.com/'
-  }
-  properties: {
-    allow: true
-  }
-}
-
 resource sites_fh_clc3_example_name_web 'Microsoft.Web/sites/config@2022-03-01' = {
   parent: sites_fh_clc3_example_name_resource
   name: 'web'
-  location: location
-  tags: {
-    'hidden-link: /app-insights-resource-id': '/subscriptions/c0a97786-cce2-4cf3-9f1a-022e775c19ad/resourceGroups/rg-fh-clc3-example/providers/microsoft.insights/components/fh-clc3-example'
-    'hidden-link: /app-insights-instrumentation-key': '4f49708e-7854-4491-92f1-317950e3d193'
-    'hidden-link: /app-insights-conn-string': 'InstrumentationKey=4f49708e-7854-4491-92f1-317950e3d193;IngestionEndpoint=https://westeurope-5.in.applicationinsights.azure.com/;LiveEndpoint=https://westeurope.livediagnostics.monitor.azure.com/'
-  }
   properties: {
     numberOfWorkers: 1
     defaultDocuments: [
@@ -205,31 +178,46 @@ resource sites_fh_clc3_example_name_web 'Microsoft.Web/sites/config@2022-03-01' 
     minimumElasticInstanceCount: 0
     azureStorageAccounts: {
     }
-  }
-}
-
-resource sites_fh_clc3_example_name_blobStorageUpload 'Microsoft.Web/sites/functions@2022-03-01' = {
-  parent: sites_fh_clc3_example_name_resource
-  name: 'blobStorageUpload'
-  location: location
-  properties: {
-    script_root_path_href: 'https://fh-clc3-example.azurewebsites.net/admin/vfs/home/site/wwwroot/blobStorageUpload/'
-    script_href: 'https://fh-clc3-example.azurewebsites.net/admin/vfs/home/site/wwwroot/clc3-azure-example-1.0-SNAPSHOT.jar'
-    config_href: 'https://fh-clc3-example.azurewebsites.net/admin/vfs/home/site/wwwroot/blobStorageUpload/function.json'
-    test_data_href: 'https://fh-clc3-example.azurewebsites.net/admin/vfs/tmp/FunctionsData/blobStorageUpload.dat'
-    href: 'https://fh-clc3-example.azurewebsites.net/admin/functions/blobStorageUpload'
-    config: {
-    }
-    invoke_url_template: 'https://fh-clc3-example.azurewebsites.net/api/blobstorageupload'
-    language: 'java'
-    isDisabled: false
+    appSettings: [
+      {
+        name: 'STORAGEACCOUNT_NAME'
+        value: storageaccount_name
+      }
+      {
+        name: 'CONTAINERNAME'
+        value: container_name
+      }
+      {
+        name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+        value: appInsights.properties.InstrumentationKey
+      }
+      {
+        name: 'AzureWebJobsStorage'
+        value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${storageAccount.listKeys().keys[0].value}'
+      }
+      {
+        name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'
+        value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${storageAccount.listKeys().keys[0].value}'
+      }
+      {
+        name: 'FUNCTIONS_EXTENSION_VERSION'
+        value: '~4'
+      }
+      {
+        name: 'FUNCTIONS_WORKER_RUNTIME'
+        value: 'java'
+      }
+      {
+        name: 'WEBSITE_CONTENTSHARE'
+        value: contentshare_name
+      }
+    ]
   }
 }
 
 resource sites_fh_clc3_example_name_sites_fh_clc3_example_name_azurewebsites_net 'Microsoft.Web/sites/hostNameBindings@2022-03-01' = {
   parent: sites_fh_clc3_example_name_resource
   name: '${sites_fh_clc3_example_name}.azurewebsites.net'
-  location: location
   properties: {
     siteName: 'fh-clc3-example'
     hostNameType: 'Verified'

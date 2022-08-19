@@ -1,12 +1,12 @@
 param location string
-var storageAccounts_jbclc3examplestorage_name = 'jbclc3examplestorage'
+param functionContentShareName string
+var storageAccounts_jbclc3examplestorage_name = 'storage${uniqueString(resourceGroup().id)}'
 
 resource storageAccounts_jbclc3examplestorage_name_resource 'Microsoft.Storage/storageAccounts@2021-09-01' = {
   name: storageAccounts_jbclc3examplestorage_name
   location: location
   sku: {
     name: 'Standard_LRS'
-    tier: 'Standard'
   }
   kind: 'StorageV2'
   properties: {
@@ -46,10 +46,6 @@ resource storageAccounts_jbclc3examplestorage_name_resource 'Microsoft.Storage/s
 resource storageAccounts_jbclc3examplestorage_name_default 'Microsoft.Storage/storageAccounts/blobServices@2021-09-01' = {
   parent: storageAccounts_jbclc3examplestorage_name_resource
   name: 'default'
-  sku: {
-    name: 'Standard_LRS'
-    tier: 'Standard'
-  }
   properties: {
     changeFeed: {
       enabled: false
@@ -71,48 +67,6 @@ resource storageAccounts_jbclc3examplestorage_name_default 'Microsoft.Storage/st
   }
 }
 
-resource Microsoft_Storage_storageAccounts_fileServices_storageAccounts_jbclc3examplestorage_name_default 'Microsoft.Storage/storageAccounts/fileServices@2021-09-01' = {
-  parent: storageAccounts_jbclc3examplestorage_name_resource
-  name: 'default'
-  sku: {
-    name: 'Standard_LRS'
-    tier: 'Standard'
-  }
-  properties: {
-    protocolSettings: {
-      smb: {
-      }
-    }
-    cors: {
-      corsRules: []
-    }
-    shareDeleteRetentionPolicy: {
-      enabled: false
-      days: 0
-    }
-  }
-}
-
-resource Microsoft_Storage_storageAccounts_queueServices_storageAccounts_jbclc3examplestorage_name_default 'Microsoft.Storage/storageAccounts/queueServices@2021-09-01' = {
-  parent: storageAccounts_jbclc3examplestorage_name_resource
-  name: 'default'
-  properties: {
-    cors: {
-      corsRules: []
-    }
-  }
-}
-
-resource Microsoft_Storage_storageAccounts_tableServices_storageAccounts_jbclc3examplestorage_name_default 'Microsoft.Storage/storageAccounts/tableServices@2021-09-01' = {
-  parent: storageAccounts_jbclc3examplestorage_name_resource
-  name: 'default'
-  properties: {
-    cors: {
-      corsRules: []
-    }
-  }
-}
-
 resource storageAccounts_jbclc3examplestorage_name_default_azure_webjobs_hosts 'Microsoft.Storage/storageAccounts/blobServices/containers@2021-09-01' = {
   parent: storageAccounts_jbclc3examplestorage_name_default
   name: 'azure-webjobs-hosts'
@@ -124,10 +78,6 @@ resource storageAccounts_jbclc3examplestorage_name_default_azure_webjobs_hosts '
     denyEncryptionScopeOverride: false
     publicAccess: 'None'
   }
-  dependsOn: [
-
-    storageAccounts_jbclc3examplestorage_name_resource
-  ]
 }
 
 resource storageAccounts_jbclc3examplestorage_name_default_azure_webjobs_secrets 'Microsoft.Storage/storageAccounts/blobServices/containers@2021-09-01' = {
@@ -141,10 +91,6 @@ resource storageAccounts_jbclc3examplestorage_name_default_azure_webjobs_secrets
     denyEncryptionScopeOverride: false
     publicAccess: 'None'
   }
-  dependsOn: [
-
-    storageAccounts_jbclc3examplestorage_name_resource
-  ]
 }
 
 resource storageAccounts_jbclc3examplestorage_name_default_function_releases 'Microsoft.Storage/storageAccounts/blobServices/containers@2021-09-01' = {
@@ -158,10 +104,6 @@ resource storageAccounts_jbclc3examplestorage_name_default_function_releases 'Mi
     denyEncryptionScopeOverride: false
     publicAccess: 'None'
   }
-  dependsOn: [
-
-    storageAccounts_jbclc3examplestorage_name_resource
-  ]
 }
 
 resource storageAccounts_jbclc3examplestorage_name_default_imageanalysis 'Microsoft.Storage/storageAccounts/blobServices/containers@2021-09-01' = {
@@ -175,10 +117,6 @@ resource storageAccounts_jbclc3examplestorage_name_default_imageanalysis 'Micros
     denyEncryptionScopeOverride: false
     publicAccess: 'None'
   }
-  dependsOn: [
-
-    storageAccounts_jbclc3examplestorage_name_resource
-  ]
 }
 
 resource storageAccounts_jbclc3examplestorage_name_default_results 'Microsoft.Storage/storageAccounts/blobServices/containers@2021-09-01' = {
@@ -192,21 +130,12 @@ resource storageAccounts_jbclc3examplestorage_name_default_results 'Microsoft.St
     denyEncryptionScopeOverride: false
     publicAccess: 'None'
   }
-  dependsOn: [
-
-    storageAccounts_jbclc3examplestorage_name_resource
-  ]
 }
 
-resource Microsoft_Storage_storageAccounts_tableServices_tables_storageAccounts_jbclc3examplestorage_name_default_imageanalysis 'Microsoft.Storage/storageAccounts/tableServices/tables@2021-09-01' = {
-  parent: Microsoft_Storage_storageAccounts_tableServices_storageAccounts_jbclc3examplestorage_name_default
-  name: 'imageanalysis'
-  properties: {
-  }
-  dependsOn: [
-
-    storageAccounts_jbclc3examplestorage_name_resource
-  ]
+resource functionContentShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2021-04-01' = {
+  name: '${storageAccounts_jbclc3examplestorage_name_resource.name}/default/${functionContentShareName}'
 }
 
 output storageAccounts_jbclc3examplestorage_name_default_results string = storageAccounts_jbclc3examplestorage_name_default_results.id
+output storageAccounts_jbclc3examplestorage_name_default_imageanalysis string = storageAccounts_jbclc3examplestorage_name_default_imageanalysis.name
+output storageaccount_name string = storageAccounts_jbclc3examplestorage_name
