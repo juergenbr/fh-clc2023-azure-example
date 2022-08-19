@@ -1,6 +1,6 @@
 param location string
 var connections_cognitiveservicescomputervision_name = 'cognitiveservicescomputervision-1'
-var accounts_fhclc3excompvis_name = 'fhclc3excompvis'
+var accounts_fhclc3excompvis_name = 'fhclc3excompvis-${uniqueString(resourceGroup().id)}'
 
 resource connections_cognitiveservicescomputervision_name_resource 'Microsoft.Web/connections@2016-06-01' = {
   name: connections_cognitiveservicescomputervision_name
@@ -34,11 +34,8 @@ resource connections_cognitiveservicescomputervision_name_resource 'Microsoft.We
   }
 }
 
-resource computervision_free 'Microsoft.CognitiveServices/accounts@2022-03-01' existing = {
-  name: accounts_fhclc3excompvis_name
-}
 
-resource accounts_fhclc3excompvis_name_resource 'Microsoft.CognitiveServices/accounts@2022-03-01' = if(null == computervision_free.name) {
+resource accounts_fhclc3excompvis_name_resource 'Microsoft.CognitiveServices/accounts@2022-03-01' = {
   name: accounts_fhclc3excompvis_name
   location: location
   sku: {

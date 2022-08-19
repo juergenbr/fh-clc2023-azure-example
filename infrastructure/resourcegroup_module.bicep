@@ -34,6 +34,7 @@ module logicapp_module 'logicapp_module.bicep' = {
     location: location
     connections_azureblob_name_resource_id: storage_module.outputs.storageAccounts_jbclc3examplestorage_name_default_results
     connections_cognitiveservicescomputervision_name_resource_id: congitiveservice_module.outputs.connections_cognitiveservicescomputervision_name_resource_id
+    storageaccount_name: storage_module.outputs.storageaccount_name
   }
 }
 

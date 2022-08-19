@@ -1,6 +1,7 @@
 param connections_azureblob_name_resource_id string
 param connections_cognitiveservicescomputervision_name_resource_id string
 param location string
+param storageaccount_name string
 
 var workflows_fh_clc3_logicapp_name = 'fh-clc3-logicapp'
 
@@ -45,7 +46,7 @@ resource workflows_fh_clc3_logicapp_name_resource 'Microsoft.Logic/workflows@201
               }
             }
             method: 'get'
-            path: '/v2/datasets/@{encodeURIComponent(encodeURIComponent(\'jbclc3examplestorage\'))}/triggers/batch/onupdatedfile'
+            path: '/v2/datasets/@{encodeURIComponent(encodeURIComponent(\'${storageaccount_name}\'))}/triggers/batch/onupdatedfile'
             queries: {
               checkBothCreatedAndModifiedDateTime: false
               folderId: 'JTJmaW1hZ2VhbmFseXNpcw=='
@@ -82,7 +83,7 @@ resource workflows_fh_clc3_logicapp_name_resource 'Microsoft.Logic/workflows@201
               }
             }
             method: 'post'
-            path: '/v2/datasets/@{encodeURIComponent(encodeURIComponent(\'jbclc3examplestorage\'))}/files'
+            path: '/v2/datasets/@{encodeURIComponent(encodeURIComponent(\'${storageaccount_name}\'))}/files'
             queries: {
               folderPath: '/results'
               name: '@{body(\'Parse_JSON\')?[\'filename\']}.json'
@@ -106,7 +107,7 @@ resource workflows_fh_clc3_logicapp_name_resource 'Microsoft.Logic/workflows@201
               }
             }
             method: 'get'
-            path: '/v2/datasets/@{encodeURIComponent(encodeURIComponent(\'jbclc3examplestorage\'))}/GetFileContentByPath'
+            path: '/v2/datasets/@{encodeURIComponent(encodeURIComponent(\'${storageaccount_name}\'))}/GetFileContentByPath'
             queries: {
               inferContentType: true
               path: '@triggerBody()?[\'Path\']'
@@ -226,5 +227,18 @@ resource workflows_fh_clc3_logicapp_name_resource 'Microsoft.Logic/workflows@201
         }
       }
     }
+  }
+}
+
+resource storageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
+  name: storageaccount_name
+}
+
+resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(storageaccount_name,workflows_fh_clc3_logicapp_name_resource.id)
+  scope: storageAccount
+  properties: {
+    principalId: workflows_fh_clc3_logicapp_name_resource.identity.principalId
+    roleDefinitionId: '/providers/Microsoft.Authorization/roleDefinitions/ba92f5b4-2d11-453d-a403-e96b0029c9fe'
   }
 }

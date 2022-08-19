@@ -114,7 +114,7 @@ resource sites_fh_clc3_example_name_web 'Microsoft.Web/sites/config@2022-03-01' 
     logsDirectorySizeLimit: 35
     detailedErrorLoggingEnabled: false
     publishingUsername: '$fh-clc3-example'
-    scmType: 'None'
+    scmType: 'GitHubAction'
     use32BitWorkerProcess: false
     webSocketsEnabled: false
     alwaysOn: false
@@ -167,7 +167,7 @@ resource sites_fh_clc3_example_name_web 'Microsoft.Web/sites/config@2022-03-01' 
         description: 'Allow all access'
       }
     ]
-    scmIpSecurityRestrictionsUseMain: true
+    scmIpSecurityRestrictionsUseMain: false
     http20Enabled: false
     minTlsVersion: '1.2'
     scmMinTlsVersion: '1.2'
@@ -221,5 +221,14 @@ resource sites_fh_clc3_example_name_sites_fh_clc3_example_name_azurewebsites_net
   properties: {
     siteName: 'fh-clc3-example'
     hostNameType: 'Verified'
+  }
+}
+
+resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(storageaccount_name,sites_fh_clc3_example_name_resource.id)
+  scope: storageAccount
+  properties: {
+    principalId: sites_fh_clc3_example_name_resource.identity.principalId
+    roleDefinitionId: '/providers/Microsoft.Authorization/roleDefinitions/ba92f5b4-2d11-453d-a403-e96b0029c9fe'
   }
 }
