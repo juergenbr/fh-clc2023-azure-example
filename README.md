@@ -15,7 +15,7 @@
      - 'deploymentName': free choosable name for the deployment (e.g. `clc3-example`)
      - 'rgName': name of the resource group which should be created for the deployment (e.g. `rg-clc3-example`)
      - 'location': region where the infrastructure should be created (e.g. `westeurope`)
-
+8) **In case the deployment fails because it could not create the role-assignments, trigger the deployment a second time using the exact same values as before. This error is caused by Azure AD having a delay in the creation of new identities, while the template assumes that they are created immediately.**
 ---
 ## Function deployment
 If the above deployment worked without errors you can deploy the function code as a next step.
@@ -38,7 +38,55 @@ At this point, your function should be ready to upload an image to the blob stor
 
 ---
 ## Logic App Setup
+
+### Prerequisites
+Before continuing, find the following information in the Azure Cognitive Service instance that was created during the infrastructure deployment.
+1. Click on your computer vision service in the resource group you created.
+2. Click on `Keys and Endpoints` in the left-hand menu.
+3. Copy the value in `Key 1` and `Endpoint` to a text file. You will need it in the next steps.
+
+### Setup
 1. Find the Logic App in your resource group named `fh-clc3-logicapp` and open it.
 2. Click the `Edit` button in the top menu
-3. Edit the steps marked with an exclamation mark. Those steps require a connection configuration to communicate the the underlying  Azure Services (Storage Account and Congitive Service).
-4. **TODO: add screenshots and how-to**
+3. Edit the steps marked with an orange exclamation mark. Those steps require a connection configuration to communicate the the underlying  Azure Services (Storage Account and Congitive Service).
+   1. Edit the Trigger setep by clicking on it. You will see a list wiht one entry named "fh-clc3-example-connection" and a red error message "Invalid Connection"
+   2. Select the invalid connection
+   3. Under `Authentication Type` select `Logic App Managed Identity` and use name "fh-clc3-example-connection"
+   4. The connection should look like this:
+   
+   ![Image](./doc/images/trigger-connection-working.png])
+
+   5. Select the next step in the workflow. You will again see the connection tab, but now there should be a second connection with does not have an exclamation mark next to it. Select this entry.
+    
+   ![Image](./doc/images/second-step-connection.png])
+
+   6. Select the next step in the worklfow. This is the connection to the Azure Computer Vision Service.
+
+   ![Image](./doc/images/cognitive-service-connection.png])
+
+   7. Click the `Add new` button
+   8. Enter the following values:
+      * Connection name: `Computer Vision Connection`
+      * Authentication Type: `Api Key` (already selected by default)
+      * Account key: insert Key from the prerequisites step
+      * Site URL: insert Endpoint URL from the prerequisites step
+   9. Click `Create`
+   10. Perform the same as in step 5 using the last step in the workflow.
+   11. Click `Save` in the top menu bar of the Logic App. **Do not forget this, otherwise you have to re-do all steps**
+
+---
+
+## Testing
+Get the URL of your function by
+1. navigation to the Function App in the Azure portal
+2. click `Functions` in the left hand menu
+3. click on the name `blobStorageUpload` function
+3. click `Get Function Url` and copy the complete URL displayed
+
+To test your apllication, use the following curl command, either from the Terminal or use Postman:
+````
+curl --location --request POST '<Your Function URL>' \
+--header 'Content-Type: application/octet-stream' \
+--header 'Cache-Control: no-cache' \
+--data-binary '@<Path to image file'
+````
