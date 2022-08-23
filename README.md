@@ -90,3 +90,9 @@ curl --location --request POST '<Your Function URL>' \
 --header 'Cache-Control: no-cache' \
 --data-binary '@<Path to image file'
 ````
+
+TODO #1
+
+TODO #2
+
+TODO #3
