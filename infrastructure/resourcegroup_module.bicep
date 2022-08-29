@@ -5,6 +5,7 @@ param connections_azureblob_name string = 'azureblob'
 param location string = 'westeurope'
 
 var contentshare_name = 'functioncontentshare'
+var cosmosdb_name = 'fh-clc3-cosmosdb'
 
 module insights_module 'insights_module.bicep' = {
   name: 'insights_module'
@@ -28,13 +29,31 @@ module congitiveservice_module 'cognitiveservice_module.bicep' = {
   }
 }
 
+module cosmosdb_module 'cosmosdb_module.bicep' = {
+  name: 'cosmosdb_module'
+  params: {
+    location: location
+    cosmosdb_name: cosmosdb_name
+  }
+}
+
 module logicapp_module 'logicapp_module.bicep' = {
   name: 'logicapp_module'
   params: {
     location: location
     connections_azureblob_name_resource_id: storage_module.outputs.storageAccounts_jbclc3examplestorage_name_default_results
     connections_cognitiveservicescomputervision_name_resource_id: congitiveservice_module.outputs.connections_cognitiveservicescomputervision_name_resource_id
+    connections_cosmosdb_name_resource_id: cosmosdb_module.outputs.cosmosdb_id
     storageaccount_name: storage_module.outputs.storageaccount_name
+    cosmosdb_name: cosmosdb_name
+  }
+}
+
+module cosmosdb_roleassignment_module 'cosmosdb_roleassignment_module.bicep' = {
+  name: 'cosmosdb_roleassignment_module'
+  params: {
+    cosmosdb_name: cosmosdb_name
+    logicapp_identity_principalid: logicapp_module.outputs.logicapp_principalid
   }
 }
 
