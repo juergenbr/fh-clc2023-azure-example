@@ -3,6 +3,18 @@
 
 # Setup
 
+## Requirements
+
+* VS Code
+* Docker
+
+## Local Environment Setup
+1) Extract the example .zip file into a folder on your local machine. The root of the folder should contain the REAMDE.md and pom.xml file.
+2) Open the folder in VS Code. You can either do this via File -> Open Folder.. or via command line by cd-ing into the folder and then using `code .` (Linux/Mac: if command `code` is not found, open VS Code, open the Command Palette and Execute `Shell Command: install 'code' command in PATH`)
+3) make sure Docker is running
+4) Use the Command Palette and execute `Remote-Containers: Open Folder in Container`. This should start a new Docker container in the background and open a new VS Code window with the project folder mounted. It will also ask to install a few recommended extensions. Depending on your hardware VS Code should finish loading shortly. Check the VS Code status bar at the very bottom to see if all activites were finished.
+5) now you should have a complete dev environment running inside the docker container.
+
 ## Infrastructure Deployment
 1) fork the example respository
 2) check out your own repo
