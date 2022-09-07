@@ -25,13 +25,18 @@ public class CognitiveServiceClientProvider {
 
         try {
             UrlBuilder builder = new UrlBuilder().setHost(endpoint);
-            builder.setPath(endpointPath);
+
+            //request parameters for image analysis
+            String requestParameters = "visualFeatures=Adult,Brands,Categories,Color,Description,Faces,ImageType,Objects,Tags";
+            builder.setPath(endpointPath + "?" + requestParameters);
             builder.setScheme("https");
             HttpRequest request = new HttpRequest(HttpMethod.POST, builder.toUrl());
 
             // Request headers.
             request.setHeader("Content-Type", "application/json");
             request.setHeader("Ocp-Apim-Subscription-Key", System.getenv(subscriptionKeyEnvVarName));
+
+            
 
             request.setBody("{\"url\":\"" + urlToImage + "\"}");
 
