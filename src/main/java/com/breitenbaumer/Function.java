@@ -53,10 +53,11 @@ public class Function {
     String fileName = getFileName(request.getHeaders());
     String url = upload(bs, fileName);
 
-    //send image to cognitive service
+    //send image to cognitive service and upload result as JSON
     CognitiveServiceClientProvider cognitiveServiceClientProvider = new CognitiveServiceClientProvider(logger);
-    cognitiveServiceClientProvider.sendRequest(url);
-
+    String analysisResultBody = cognitiveServiceClientProvider.sendRequest(url);
+    byte[] data = analysisResultBody.getBytes();
+    upload(data, fileName + ".json");
     // return response
     logger.info("Java HTTP file upload ended. Length: " + bs.length);
     return request.createResponseBuilder(HttpStatus.OK).body("Hello, " + bs.length).build();

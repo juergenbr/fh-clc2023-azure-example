@@ -20,7 +20,7 @@ public class CognitiveServiceClientProvider {
         this.logger = logger;
     }
 
-    public void sendRequest(String urlToImage) {
+    public String sendRequest(String urlToImage) {
         HttpClient httpClient = new NettyAsyncHttpClientBuilder().build();
 
         try {
@@ -44,7 +44,9 @@ public class CognitiveServiceClientProvider {
             HttpResponse response = httpClient.send(request).block();
             if(response.getStatusCode() >= 200 && response.getStatusCode() < 300){
                 logger.log(Level.INFO, "Request successful with status code " + response.getStatusCode());
-                logger.log(Level.INFO, "Response body: " + response.getBodyAsString().block());
+                String responseBody = response.getBodyAsString().block();
+                logger.log(Level.INFO, "Response body: " + responseBody);
+                return responseBody;
             }
             else{
                 logger.log(Level.WARNING, "Request NOT successful with status code " + response.getStatusCode());
@@ -54,5 +56,6 @@ public class CognitiveServiceClientProvider {
             // Display error message.
             System.out.println(e.getMessage());
         }
+        return "";
     }
 }
