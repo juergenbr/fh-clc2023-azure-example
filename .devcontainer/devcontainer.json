@@ -15,7 +15,8 @@
 			"extensions": [
 				"ms-azuretools.vscode-azurefunctions",
 				"vscjava.vscode-java-pack",
-				"redhat.vscode-xml"
+				"redhat.vscode-xml",
+				"ms-azuretools.vscode-bicep"
 			]
 		}
 	},

@@ -57,3 +57,4 @@ resource accounts_fhclc3excompvis_name_resource 'Microsoft.CognitiveServices/acc
 }
 
 output connections_cognitiveservicescomputervision_name_resource_id string = connections_cognitiveservicescomputervision_name_resource.id
+output cognitiveService_name string = accounts_fhclc3excompvis_name_resource.name

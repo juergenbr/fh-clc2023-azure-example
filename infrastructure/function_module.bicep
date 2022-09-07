@@ -3,6 +3,7 @@ param storageaccount_name string
 param container_name string
 param appInsights_name string
 param contentshare_name string
+param cogService_name string
 var sites_fh_clc3_example_name = 'fh-clc3-${uniqueString(resourceGroup().id)}'
 var serverfarms_ASP_rgfhclc3example_b5db_name = 'ASP-rgfhclc3example-b5db'
 
@@ -12,6 +13,10 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' existing 
 
 resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
   name: appInsights_name
+}
+
+resource cogService 'Microsoft.CognitiveServices/accounts@2022-03-01' existing = {
+  name: cogService_name
 }
 
 resource serverfarms_ASP_rgfhclc3example_b5db_name_resource 'Microsoft.Web/serverfarms@2022-03-01' = {
@@ -210,6 +215,10 @@ resource sites_fh_clc3_example_name_web 'Microsoft.Web/sites/config@2022-03-01' 
       {
         name: 'WEBSITE_CONTENTSHARE'
         value: contentshare_name
+      }
+      {
+        name: 'SUBSCRIPTIONKEY'
+        value: cogService.listKeys().key1
       }
     ]
   }

@@ -26,7 +26,7 @@ public class CognitiveServiceClientProvider {
         try {
             UrlBuilder builder = new UrlBuilder().setHost(endpoint);
             builder.setPath(endpointPath);
-
+            builder.setScheme("https");
             HttpRequest request = new HttpRequest(HttpMethod.POST, builder.toUrl());
 
             // Request headers.

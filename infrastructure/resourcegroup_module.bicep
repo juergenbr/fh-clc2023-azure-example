@@ -65,6 +65,7 @@ module function_module 'function_module.bicep' = {
     container_name: storage_module.outputs.storageAccounts_jbclc3examplestorage_name_default_imageanalysis
     appInsights_name: insights_module.outputs.appInsights_name
     contentshare_name: contentshare_name
+    cogService_name: congitiveservice_module.outputs.cognitiveService_name
   }
 }
 
