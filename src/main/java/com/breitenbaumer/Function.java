@@ -5,6 +5,7 @@ import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
 import com.breitenbaumer.shared.BlobClientProvider;
+import com.breitenbaumer.shared.CognitiveServiceClientProvider;
 import com.microsoft.azure.functions.ExecutionContext;
 import com.microsoft.azure.functions.HttpMethod;
 import com.microsoft.azure.functions.HttpRequestMessage;
@@ -50,7 +51,12 @@ public class Function {
     // here the "content-type" must be lower-case
     byte[] bs = request.getBody().get();
     String fileName = getFileName(request.getHeaders());
-    upload(bs, fileName);
+    String url = upload(bs, fileName);
+
+    //send image to cognitive service
+    CognitiveServiceClientProvider cognitiveServiceClientProvider = new CognitiveServiceClientProvider(logger);
+    cognitiveServiceClientProvider.sendRequest(url);
+
     // return response
     logger.info("Java HTTP file upload ended. Length: " + bs.length);
     return request.createResponseBuilder(HttpStatus.OK).body("Hello, " + bs.length).build();
@@ -66,7 +72,7 @@ public class Function {
     }
   }
 
-    public void upload(byte[] content, String fileName) {
+    public String upload(byte[] content, String fileName) {
         try {
           String containerName = System.getenv("CONTAINERNAME");
             BlobClientProvider provider = new BlobClientProvider(logger);
@@ -76,8 +82,10 @@ public class Function {
             logger.info("\n\tUploading" + fileName + " to container " + containerName);
             blobClient.upload(BinaryData.fromBytes(content), true);
             logger.info("\t\tSuccessfully uploaded the blob.");
+            return blobClient.getBlobUrl();
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Failed uploading file.", e.fillInStackTrace());
         }
+        return "";
     }
 }
