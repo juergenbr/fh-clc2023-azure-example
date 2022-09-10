@@ -20,13 +20,19 @@ public class CognitiveServiceClientProvider {
         this.logger = logger;
     }
 
+    /**
+     * Sends REST request to Computer vision endpoint and returns result
+     * @urlToImage publically reachable URL to the image that whould be analyzed
+     * @return JSON string of the analysis result
+     * @see https://docs.microsoft.com/en-us/rest/api/computervision/3.1/analyze-image/analyze-image?tabs=HTTP
+     **/
     public String sendRequest(String urlToImage) {
         HttpClient httpClient = new NettyAsyncHttpClientBuilder().build();
 
         try {
             UrlBuilder builder = new UrlBuilder().setHost(endpoint);
 
-            //request parameters for image analysis
+            // request parameters for image analysis
             String requestParameters = "visualFeatures=Adult,Brands,Categories,Color,Description,Faces,ImageType,Objects,Tags";
             builder.setPath(endpointPath + "?" + requestParameters);
             builder.setScheme("https");
@@ -36,19 +42,16 @@ public class CognitiveServiceClientProvider {
             request.setHeader("Content-Type", "application/json");
             request.setHeader("Ocp-Apim-Subscription-Key", System.getenv(subscriptionKeyEnvVarName));
 
-            
-
             request.setBody("{\"url\":\"" + urlToImage + "\"}");
 
             // Call the REST API method and get the response entity.
             HttpResponse response = httpClient.send(request).block();
-            if(response.getStatusCode() >= 200 && response.getStatusCode() < 300){
+            if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
                 logger.log(Level.INFO, "Request successful with status code " + response.getStatusCode());
                 String responseBody = response.getBodyAsString().block();
                 logger.log(Level.INFO, "Response body: " + responseBody);
                 return responseBody;
-            }
-            else{
+            } else {
                 logger.log(Level.WARNING, "Request NOT successful with status code " + response.getStatusCode());
                 logger.log(Level.WARNING, "Response body: " + response.getBodyAsString().block());
             }

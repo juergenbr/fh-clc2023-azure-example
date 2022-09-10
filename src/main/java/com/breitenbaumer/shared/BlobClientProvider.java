@@ -19,12 +19,12 @@ public class BlobClientProvider {
   private DefaultAzureCredential defaultCredential;
   private Logger logger;
 
-
   public BlobClientProvider(Logger logger) {
     this.defaultCredential = new DefaultAzureCredentialBuilder().build();
     this.logger = logger;
     logger.info("\n\tDefaultAzureCredential created.");
   }
+
   /*
    * Create new BlobServiceClient using ManagedIdentity authentication.
    */

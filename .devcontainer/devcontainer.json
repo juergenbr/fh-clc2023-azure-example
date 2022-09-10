@@ -8,7 +8,9 @@
 		// Configure properties specific to VS Code.
 		"vscode": {
 			// Set *default* container specific settings.json values on container create.
-			"settings": { 
+			"settings": {
+				"java.format.enabled": true,
+				"editor.defaultFormatter": "redhat.java"
 			},
 			
 			// Add the IDs of extensions you want installed when the container is created.
@@ -16,7 +18,8 @@
 				"ms-azuretools.vscode-azurefunctions",
 				"vscjava.vscode-java-pack",
 				"redhat.vscode-xml",
-				"ms-azuretools.vscode-bicep"
+				"ms-azuretools.vscode-bicep",
+				"redhat.java"
 			]
 		}
 	},
