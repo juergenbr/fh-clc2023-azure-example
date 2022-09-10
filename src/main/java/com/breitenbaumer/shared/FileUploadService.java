@@ -55,18 +55,24 @@ public class FileUploadService {
     }
 
     public String generateUserDelegationSASToken(String fileName) {
-        OffsetDateTime keyStart = OffsetDateTime.now();
-        OffsetDateTime keyExpiry = OffsetDateTime.now().plusMinutes(5);
-        BlobClient blobClient = provider.getBlobClient(container.getBlobContainerName(), fileName);
-        UserDelegationKey userDelegationKey = blobServiceClient.getUserDelegationKey(keyStart, keyExpiry);
-
-        BlobContainerSasPermission blobContainerSas = new BlobContainerSasPermission();
-        blobContainerSas.setReadPermission(true);
-        BlobServiceSasSignatureValues blobServiceSasSignatureValues = new BlobServiceSasSignatureValues(keyExpiry,
-                blobContainerSas);
-
-        String sas = blobClient.generateUserDelegationSas(blobServiceSasSignatureValues, userDelegationKey);
-        //logger.info("SAS: " + sas);
-        return sas;
+        try{
+            OffsetDateTime keyStart = OffsetDateTime.now();
+            OffsetDateTime keyExpiry = OffsetDateTime.now().plusMinutes(5);
+            BlobClient blobClient = provider.getBlobClient(container.getBlobContainerName(), fileName);
+            UserDelegationKey userDelegationKey = blobServiceClient.getUserDelegationKey(keyStart, keyExpiry);
+    
+            BlobContainerSasPermission blobContainerSas = new BlobContainerSasPermission();
+            blobContainerSas.setReadPermission(true);
+            BlobServiceSasSignatureValues blobServiceSasSignatureValues = new BlobServiceSasSignatureValues(keyExpiry,
+                    blobContainerSas);
+    
+            String sas = blobClient.generateUserDelegationSas(blobServiceSasSignatureValues, userDelegationKey);
+            //logger.info("SAS: " + sas);
+            return sas;
+        }
+        catch(Exception e){
+            logger.log(Level.SEVERE, "Failed generating SAS token.", e.fillInStackTrace());
+        }
+        return "";
     }
 }
