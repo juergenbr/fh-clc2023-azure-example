@@ -20,20 +20,29 @@ public class FileUploadService {
     private Logger logger;
     private BlobClientProvider provider;
     private BlobServiceClient blobServiceClient;
-    private BlobContainerClient container;
-    private static String containerName = System.getenv("CONTAINERNAME");
+    private BlobContainerClient imageContainer;
+    private BlobContainerClient resultContainer;
+    private static String imagecontainerName = System.getenv("CONTAINERNAME");
+    private static String resultscontainerName = System.getenv("RESULTSCONTAINERNAME");
 
     public FileUploadService(Logger logger) {
         this.logger = logger;
         this.provider = new BlobClientProvider(logger);
         this.blobServiceClient = provider.getBlobServiceClient();
-        this.container = blobServiceClient.createBlobContainerIfNotExists(containerName);
+        this.imageContainer = blobServiceClient.createBlobContainerIfNotExists(imagecontainerName);
+        this.resultContainer = blobServiceClient.createBlobContainerIfNotExists(resultscontainerName);
     }
 
     public String upload(byte[] content, String fileName) {
         try {
-            BlobClient blobClient = provider.getBlobClient(container.getBlobContainerName(), fileName);
-            logger.info("\n\tUploading" + fileName + " to container " + containerName);
+            BlobClient blobClient;
+            if(fileName.endsWith(".json")){
+                blobClient = provider.getBlobClient(resultContainer.getBlobContainerName(), fileName);
+            }
+            else{
+                blobClient = provider.getBlobClient(imageContainer.getBlobContainerName(), fileName);
+            }
+            logger.info("\n\tUploading" + fileName + " to container " + blobClient.getContainerName());
             blobClient.upload(BinaryData.fromBytes(content), true);
             logger.info("\t\tSuccessfully uploaded the blob.");
             return blobClient.getBlobUrl();
@@ -58,7 +67,7 @@ public class FileUploadService {
         try{
             OffsetDateTime keyStart = OffsetDateTime.now();
             OffsetDateTime keyExpiry = OffsetDateTime.now().plusMinutes(5);
-            BlobClient blobClient = provider.getBlobClient(container.getBlobContainerName(), fileName);
+            BlobClient blobClient = provider.getBlobClient(imageContainer.getBlobContainerName(), fileName);
             UserDelegationKey userDelegationKey = blobServiceClient.getUserDelegationKey(keyStart, keyExpiry);
     
             BlobContainerSasPermission blobContainerSas = new BlobContainerSasPermission();

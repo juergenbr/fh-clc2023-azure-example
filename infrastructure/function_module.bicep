@@ -1,6 +1,7 @@
 param location string
 param storageaccount_name string
-param container_name string
+param imagecontainer_name string
+param resultscontainer_name string
 param appInsights_name string
 param contentshare_name string
 param cogService_name string
@@ -190,7 +191,11 @@ resource sites_fh_clc3_example_name_web 'Microsoft.Web/sites/config@2022-03-01' 
       }
       {
         name: 'CONTAINERNAME'
-        value: container_name
+        value: imagecontainer_name
+      }
+      {
+        name: 'RESULTSCONTAINERNAME'
+        value: imagecontainer_name
       }
       {
         name: 'APPINSIGHTS_INSTRUMENTATIONKEY'

@@ -62,7 +62,8 @@ module function_module 'function_module.bicep' = {
   params: {
     location: location
     storageaccount_name: storage_module.outputs.storageaccount_name
-    container_name: storage_module.outputs.storageAccounts_jbclc3examplestorage_name_default_imageanalysis
+    imagecontainer_name: storage_module.outputs.storageAccounts_jbclc3examplestorage_name_default_imageanalysis
+    resultscontainer_name: storage_module.outputs.storageAccounts_jbclc3examplestorage_name_default_results
     appInsights_name: insights_module.outputs.appInsights_name
     contentshare_name: contentshare_name
     cogService_name: congitiveservice_module.outputs.cognitiveService_name
