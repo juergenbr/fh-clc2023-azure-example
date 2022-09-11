@@ -30,10 +30,9 @@ public class BlobClientProvider {
    */
   public BlobServiceClient getBlobServiceClient() {
     logger.info("Trying to connect to storage account " + storageAccountUrl);
-    DefaultAzureCredential defaultCredential = new DefaultAzureCredentialBuilder().build();
     BlobServiceClient client = new BlobServiceClientBuilder()
         .endpoint(storageAccountUrl)
-        .credential(defaultCredential)
+        .credential(this.defaultCredential)
         .buildClient();
     return client;
   }
