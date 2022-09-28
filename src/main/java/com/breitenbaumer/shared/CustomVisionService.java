@@ -19,9 +19,13 @@ public class CustomVisionService {
                 String result = "";
 
                 String trainingEndpoint = System.getenv("CUSTOM_VISION_TRAINING_ENDPOINT");
+                logger.info("trainingEndpoint: " + trainingEndpoint);
                 String trainingApiKey = System.getenv("CUSTOM_VISION_TRAINING_KEY");
+                logger.info("trainingApiKey size: " + trainingApiKey.length());
                 String predictionEndpoint = System.getenv("CUSTOM_VISION_PREDICTION_ENDPOINT");
+                logger.info("predictionEndpoint: " + predictionEndpoint);
                 String predictionApiKey = System.getenv("CUSTOM_VISION_PREDICTION_KEY");
+                logger.info("predictionApiKey size: " + predictionApiKey.length());
 
                 // init custom service
                 CustomVisionTrainingClient trainer = CustomVisionTrainingManager
