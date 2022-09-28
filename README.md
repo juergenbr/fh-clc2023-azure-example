@@ -103,7 +103,7 @@ curl --location --request POST '<Your Function URL>' \
 --data-binary '@<Path to image file'
 ````
 
-## Custom Vision
+## Extra: Custom Vision
 A more advanced version of this example uses the Custom Vision service in Azure to train a custom model.
 As an example we want to distinguish soda bottles and let the model classify if it is either one of the following option:
 
@@ -133,4 +133,13 @@ To access the Custom Vision portal, open URL https://www.customvision.ai and log
    * add tag "fanta" in the "My Tags" field and press enter
    * Click the "Upload x files" button (x depends on the number of images you selected)
    * repeat those steps for folder "coca_cola" and "sprite" and use tag values "coca cola" and "sprite"
+
+5) If you uploaded and tagged all images, click the "train" button in the top right. You can choose between "Quick Training" and "Advanced Training". For better qualits, choose `Advanced Training` and set the maximum time to 1 hour (**ATTENTION: every additional hour will cost $10!**). Then click `Train`, get a snack and wait until it is finished.
+
+6) When the training finisehd sucessfully you should see the results in the "Performance" tab. You should also see a `Publish`button on top. Click it to publish your model and choose a name.
+
+7) Now we need the URL for our Azure function. Click `Prediction URL` and choose the second one where it says "If you have an image file". Remove the first part of the url **https://yourname.cognitiveservices.azure.com/** including the slash!
+What is left should look like this: `customvision/v3.0/Prediction/63d58ba7-0a1c-4361-9bfb-2b29f749f7d1/classify/iterations/Version%201/image`
+
+8) Store the URL path that is left in the Function App Configuration, using the name `CUSTOM_VISION_PREDICTION_PATH`
 
