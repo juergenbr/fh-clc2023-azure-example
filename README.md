@@ -7,6 +7,8 @@
 
 * VS Code
 * Docker
+* Postman
+* GitHub Account
 
 ## Local Environment Setup
 1) Extract the example .zip file into a folder on your local machine. The root of the folder should contain the REAMDE.md and pom.xml file.
@@ -66,15 +68,15 @@ Before continuing, find the following information in the Azure Cognitive Service
    3. Under `Authentication Type` select `Logic App Managed Identity` and use name "fh-clc3-example-connection"
    4. The connection should look like this:
    
-   ![Image](./doc/images/trigger-connection-working.png])
+   ![Image](https://github.com/juergenbr/fh-clc2022-azure-example/blob/master/doc/images/trigger-connection-working.png)
 
    5. Select the next step in the workflow. You will again see the connection tab, but now there should be a second connection with does not have an exclamation mark next to it. Select this entry.
     
-   ![Image](./doc/images/second-step-connection.png])
+   ![Image](https://github.com/juergenbr/fh-clc2022-azure-example/blob/master/doc/images/second-step-connection.png])
 
    6. Select the next step in the worklfow. This is the connection to the Azure Computer Vision Service.
 
-   ![Image](./doc/images/cognitive-service-connection.png])
+   ![Image](https://github.com/juergenbr/fh-clc2022-azure-example/blob/master/doc/images/cognitive-service-connection.png])
 
    7. Click the `Add new` button
    8. Enter the following values:
