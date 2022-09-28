@@ -1,6 +1,8 @@
 param location string
 var connections_cognitiveservicescomputervision_name = 'cognitiveservicescomputervision-1'
 var accounts_fhclc3excompvis_name = 'fhclc3excompvis-${uniqueString(resourceGroup().id)}'
+var accounts_fhclc3excustvis_name = 'fhclc3excustvis${uniqueString(resourceGroup().id)}'
+var accounts_fhclc3excustvis_pred_name = 'fhclc3excustvis${uniqueString(resourceGroup().id)}pred'
 
 resource connections_cognitiveservicescomputervision_name_resource 'Microsoft.Web/connections@2016-06-01' = {
   name: connections_cognitiveservicescomputervision_name
@@ -56,5 +58,44 @@ resource accounts_fhclc3excompvis_name_resource 'Microsoft.CognitiveServices/acc
   }
 }
 
+resource customvision_training 'Microsoft.CognitiveServices/accounts@2022-03-01' = {
+  name: accounts_fhclc3excustvis_name
+  location: location
+  sku: {
+    name: 'F0'
+  }
+  kind: 'CustomVision.Training'
+  properties: {
+    customSubDomainName:accounts_fhclc3excustvis_name
+    networkAcls: {
+      defaultAction: 'Allow'
+      virtualNetworkRules: []
+      ipRules: []
+    }
+    publicNetworkAccess: 'Enabled'
+  }
+}
+
+resource customvision_prediction 'Microsoft.CognitiveServices/accounts@2022-03-01' = {
+  name: accounts_fhclc3excustvis_pred_name
+  location: location
+  sku: {
+    name: 'F0'
+  }
+  kind: 'CustomVision.Prediction'
+  properties: {
+    customSubDomainName:accounts_fhclc3excustvis_pred_name
+    networkAcls: {
+      defaultAction: 'Allow'
+      virtualNetworkRules: []
+      ipRules: []
+    }
+    publicNetworkAccess: 'Enabled'
+  }
+}
+
 output connections_cognitiveservicescomputervision_name_resource_id string = connections_cognitiveservicescomputervision_name_resource.id
 output cognitiveService_name string = accounts_fhclc3excompvis_name_resource.name
+output customvision_training_name string = customvision_training.name
+output customvision_prediction_name string = customvision_prediction.name
+

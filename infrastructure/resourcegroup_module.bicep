@@ -67,6 +67,8 @@ module function_module 'function_module.bicep' = {
     appInsights_name: insights_module.outputs.appInsights_name
     contentshare_name: contentshare_name
     cogService_name: congitiveservice_module.outputs.cognitiveService_name
+    customVisionServicePrediction_name: congitiveservice_module.outputs.customvision_prediction_name
+    customVisionServiceTraining_name: congitiveservice_module.outputs.customvision_training_name
   }
 }
 

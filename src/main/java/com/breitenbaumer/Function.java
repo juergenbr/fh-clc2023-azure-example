@@ -1,6 +1,6 @@
 package com.breitenbaumer;
 
-import com.breitenbaumer.shared.CognitiveServiceClientProvider;
+import com.breitenbaumer.shared.CognitiveService;
 import com.breitenbaumer.shared.FileUploadService;
 import com.microsoft.azure.functions.ExecutionContext;
 import com.microsoft.azure.functions.HttpMethod;
@@ -42,8 +42,8 @@ public class Function {
     String sas = uploadSerivce.generateUserDelegationSASToken(fileName);
     String blobUrl = url + "?" + sas;
     // send image to cognitive service and upload result as JSON
-    CognitiveServiceClientProvider cognitiveServiceClientProvider =
-        new CognitiveServiceClientProvider(logger);
+    CognitiveService cognitiveServiceClientProvider =
+        new CognitiveService(logger);
     String analysisResultBody = cognitiveServiceClientProvider.sendRequest(blobUrl);
     byte[] data = analysisResultBody.getBytes();
     uploadSerivce.upload(data, fileName + ".json");

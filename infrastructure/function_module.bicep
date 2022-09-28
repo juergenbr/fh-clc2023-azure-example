@@ -5,6 +5,8 @@ param resultscontainer_name string
 param appInsights_name string
 param contentshare_name string
 param cogService_name string
+param customVisionServicePrediction_name string
+param customVisionServiceTraining_name string
 var sites_fh_clc3_example_name = 'fh-clc3-${uniqueString(resourceGroup().id)}'
 var serverfarms_ASP_rgfhclc3example_b5db_name = 'ASP-rgfhclc3example-b5db'
 
@@ -18,6 +20,14 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
 
 resource cogService 'Microsoft.CognitiveServices/accounts@2022-03-01' existing = {
   name: cogService_name
+}
+
+resource customVisionService 'Microsoft.CognitiveServices/accounts@2022-03-01' existing = {
+  name: customVisionServicePrediction_name
+}
+
+resource customVisionServiceTraining 'Microsoft.CognitiveServices/accounts@2022-03-01' existing = {
+  name: customVisionServiceTraining_name
 }
 
 resource serverfarms_ASP_rgfhclc3example_b5db_name_resource 'Microsoft.Web/serverfarms@2022-03-01' = {
@@ -195,7 +205,7 @@ resource sites_fh_clc3_example_name_web 'Microsoft.Web/sites/config@2022-03-01' 
       }
       {
         name: 'RESULTSCONTAINERNAME'
-        value: imagecontainer_name
+        value: resultscontainer_name
       }
       {
         name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
@@ -224,6 +234,22 @@ resource sites_fh_clc3_example_name_web 'Microsoft.Web/sites/config@2022-03-01' 
       {
         name: 'SUBSCRIPTIONKEY'
         value: cogService.listKeys().key1
+      }
+      {
+        name: 'CUSTOM_VISION_TRAINING_ENDPOINT'
+        value: customVisionServiceTraining.properties.endpoint
+      }
+      {
+        name: 'CUSTOM_VISION_TRAINING_KEY'
+        value: customVisionServiceTraining.listKeys().key1
+      }
+      {
+        name: 'CUSTOM_VISION_PREDICTION_ENDPOINT'
+        value: customVisionService.properties.endpoint
+      }
+      {
+        name: 'CUSTOM_VISION_PREDICTION_KEY'
+        value: customVisionService.listKeys().key1
       }
     ]
   }

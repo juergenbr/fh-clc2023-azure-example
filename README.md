@@ -103,8 +103,34 @@ curl --location --request POST '<Your Function URL>' \
 --data-binary '@<Path to image file'
 ````
 
-TODO #1
+## Custom Vision
+A more advanced version of this example uses the Custom Vision service in Azure to train a custom model.
+As an example we want to distinguish soda bottles and let the model classify if it is either one of the following option:
 
-TODO #2
+* Coca Cola
+* Fanta
+* Sprite
 
-TODO #3
+1) First thing we need is to deploy the Custom Vision infrastructure. This was already done via the provided infrastructure template. It created a new training and prediction account inside the resource group.
+To access the Custom Vision portal, open URL https://www.customvision.ai and log in with the same Microsoft user that you use for the Azure portal.
+
+2) Next thing to do is to create a new project. The free tier allows to create 2 projects. Click on the "New Projects" button and enter the following:
+
+   * Name: Soda identifier
+   * Description: Vision model to detect Cola, Fanta and Sprite bottles in images
+   * Resource: select "fhclc3excustvis*" (* is a random string generated during resource creation)
+   * Project Type: Classifciation
+   * Classification Types: Multiclass (single tag per image) 
+   * Domains: Retail
+
+3) Click "Create Project".
+
+4) Now you are ready to upload the images.Go back to the Custom Vision portal (https://www.customvision.ai) and click "Add imgages". Perform the following steps:
+   * navigate to the folder where you downloaded the training data set
+   * open folder "fanta"
+   * select all images and click "Open" to load them
+   * a new window in the Custom Vision portal opens where you can add the tags
+   * add tag "fanta" in the "My Tags" field and press enter
+   * Click the "Upload x files" button (x depends on the number of images you selected)
+   * repeat those steps for folder "coca_cola" and "sprite" and use tag values "coca cola" and "sprite"
+
