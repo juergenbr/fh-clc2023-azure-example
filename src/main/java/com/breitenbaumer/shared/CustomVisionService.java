@@ -12,41 +12,54 @@ import com.microsoft.azure.cognitiveservices.vision.customvision.training.Custom
 import com.microsoft.azure.cognitiveservices.vision.customvision.training.models.Iteration;
 import com.microsoft.azure.cognitiveservices.vision.customvision.training.models.Project;
 
+import java.util.logging.Logger;
+
 public class CustomVisionService {
-    public static String classify(byte[] image) {
-        String result = "";
+        public static String classify(Logger logger, byte[] image) {
+                String result = "";
 
-        String trainingEndpoint = System.getenv("CUSTOM_VISION_TRAINING_ENDPOINT");
-        String trainingApiKey = System.getenv("CUSTOM_VISION_TRAINING_KEY");
-        String predictionEndpoint = System.getenv("CUSTOM_VISION_PREDICTION_ENDPOINT");
-        String predictionApiKey = System.getenv("CUSTOM_VISION_PREDICTION_KEY");
+                String trainingEndpoint = System.getenv("CUSTOM_VISION_TRAINING_ENDPOINT");
+                String trainingApiKey = System.getenv("CUSTOM_VISION_TRAINING_KEY");
+                String predictionEndpoint = System.getenv("CUSTOM_VISION_PREDICTION_ENDPOINT");
+                String predictionApiKey = System.getenv("CUSTOM_VISION_PREDICTION_KEY");
 
-        // init custom service
-        CustomVisionTrainingClient trainer = CustomVisionTrainingManager
-                .authenticate(trainingEndpoint, trainingApiKey)
-                .withEndpoint(trainingEndpoint);
-        CustomVisionPredictionClient predictor = CustomVisionPredictionManager
-                .authenticate(predictionEndpoint, predictionApiKey)
-                .withEndpoint(predictionEndpoint);
+                // init custom service
+                CustomVisionTrainingClient trainer = CustomVisionTrainingManager
+                                .authenticate(trainingEndpoint, trainingApiKey)
+                                .withEndpoint(trainingEndpoint);
+                CustomVisionPredictionClient predictor = CustomVisionPredictionManager
+                                .authenticate(predictionEndpoint, predictionApiKey)
+                                .withEndpoint(predictionEndpoint);
 
-        List<Project> projects = trainer.trainings().getProjects();
-        UUID projectId = projects.get(0).id();
-        List<Iteration> iterations = trainer.trainings().getIterations(projectId);
-        String publishName = iterations.get(iterations.size() - 1).publishName();
-        // predict
-        ImagePrediction results = predictor
-                .predictions()
-                .classifyImage()
-                .withProjectId(projectId)
-                .withPublishedName(publishName)
-                .withImageData(image)
-                .execute();
+                List<Project> projects = trainer.trainings().getProjects();
+                logger.info("Found " + projects.size() + " projects.");
+                if (projects.size() == 0) {
+                        return "No projects found.";
+                } else {
+                        UUID projectId = projects.get(0).id();
+                        logger.info("Using project " + projectId);
+                        List<Iteration> iterations = trainer.trainings().getIterations(projectId);
+                        logger.info("Found " + iterations.size() + " iterations.");
+                        if (iterations.size() == 0) {
+                                return "No iterations found.";
+                        } else {
+                                String publishName = iterations.get(iterations.size() - 1).publishName();
+                                // predict
+                                ImagePrediction results = predictor
+                                                .predictions()
+                                                .classifyImage()
+                                                .withProjectId(projectId)
+                                                .withPublishedName(publishName)
+                                                .withImageData(image)
+                                                .execute();
 
-        for (Prediction prediction : results.predictions()) {
-            result += String.format("\t%s: %.2f%%", prediction.tagName(), prediction.probability() * 100.0f)
-                    + System.lineSeparator();
+                                for (Prediction prediction : results.predictions()) {
+                                        result += String.format("\t%s: %.2f%%", prediction.tagName(),
+                                                        prediction.probability() * 100.0f)
+                                                        + System.lineSeparator();
+                                }
+                                return result;
+                        }
+                }
         }
-        return result;
-    }
-
 }
