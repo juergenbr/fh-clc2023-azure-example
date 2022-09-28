@@ -34,7 +34,7 @@ public class CustomVisionFunction {
 
     byte[] image = request.getBody().get();
     
-    result = CustomVisionService.classify(logger, image);
+    result = CustomVisionService.classifyRest(logger, image);
       
     return request.createResponseBuilder(HttpStatus.OK).body("Prediction result: " + result).build();
   }
