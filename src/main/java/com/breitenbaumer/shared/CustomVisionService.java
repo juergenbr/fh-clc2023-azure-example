@@ -32,10 +32,10 @@ public class CustomVisionService {
                                 .withEndpoint(predictionEndpoint);
 
                 List<Project> projects = trainer.trainings().getProjects();
-                logger.info("Found " + projects.size() + " projects.");
-                if (projects.size() == 0) {
+                if(null == projects || projects.size() == 0) {
                         return "No projects found.";
-                } else {
+                }else {
+                        logger.info("Found " + projects.size() + " projects.");
                         UUID projectId = projects.get(0).id();
                         logger.info("Using project " + projectId);
                         List<Iteration> iterations = trainer.trainings().getIterations(projectId);
