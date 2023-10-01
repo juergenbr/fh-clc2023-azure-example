@@ -23,13 +23,32 @@
 3) Open Terminal in the repo root folder
 4) execute `cd ./infrastructure`
 5) execute `az login` and log in to your Azure Free Trial account
-6) execute `az account set --subscription <your subscription name>`
-7) execute `az deployment sub create --template-file main.bicep --location WestEurope`
+   You will get the following output:
+   ```
+   [
+     {
+       "cloudName": "AzureCloud",
+       "homeTenantId": "f88d4b73-6bb2-4b9a-abc7-eb96e5a6407c",
+       "id": "fb0e8e47-e203-45b3-a725-3a365ce122ba",
+       "isDefault": true,
+       "managedByTenants": [],
+       "name": "Azure for Students",
+       "state": "Enabled",
+       "tenantId": "f88d4b73-6bb2-4b9a-abc7-eb96e5a6407c",
+       "user": {
+         "name": "p61219@fhooe.at",
+         "type": "user"
+       }
+     }
+   ]
+   ```
+7) execute `az account set --subscription <"id" from the output above>`
+8) execute `az deployment sub create --template-file main.bicep --location WestEurope`
    - The deployment will ask for the following values:
      - 'deploymentName': free choosable name for the deployment (e.g. `clc3-example`)
      - 'rgName': name of the resource group which should be created for the deployment (e.g. `rg-clc3-example`)
      - 'location': region where the infrastructure should be created (e.g. `westeurope`)
-8) **In case the deployment fails because it could not create the role-assignments, trigger the deployment a second time using the exact same values as before. This error is caused by Azure AD having a delay in the creation of new identities, while the template assumes that they are created immediately.**
+9) **In case the deployment fails because it could not create the role-assignments, trigger the deployment a second time using the exact same values as before. This error is caused by Azure AD having a delay in the creation of new identities, while the template assumes that they are created immediately.**
 ---
 ## Function deployment
 If the above deployment worked without errors you can deploy the function code as a next step.
