@@ -12,7 +12,7 @@ resource storageAccounts_jbclc3examplestorage_name_resource 'Microsoft.Storage/s
   properties: {
     dnsEndpointType: 'Standard'
     allowedCopyScope: 'AAD'
-    defaultToOAuthAuthentication: true
+    defaultToOAuthAuthentication: false
     publicNetworkAccess: 'Enabled'
     allowCrossTenantReplication: true
     minimumTlsVersion: 'TLS1_2'
@@ -136,6 +136,7 @@ resource functionContentShare 'Microsoft.Storage/storageAccounts/fileServices/sh
   name: '${storageAccounts_jbclc3examplestorage_name_resource.name}/default/${functionContentShareName}'
 }
 
-output storageAccounts_jbclc3examplestorage_name_default_results string = storageAccounts_jbclc3examplestorage_name_default_results.id
+output storageAccounts_jbclc3examplestorage_name_default_results_id string = storageAccounts_jbclc3examplestorage_name_default_results.id
+output storageAccounts_jbclc3examplestorage_name_default_results_name string = storageAccounts_jbclc3examplestorage_name_default_results.name
 output storageAccounts_jbclc3examplestorage_name_default_imageanalysis string = storageAccounts_jbclc3examplestorage_name_default_imageanalysis.name
 output storageaccount_name string = storageAccounts_jbclc3examplestorage_name

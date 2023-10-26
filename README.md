@@ -1,3 +1,6 @@
+# fh-clc2022-azure-example
+[![Build and deploy Java project to Azure Function App - fh-clc3-4xn73xp6xleaa](https://github.com/juergenbr/fh-clc2022-azure-example/actions/workflows/master_fh-clc3-4xn73xp6xleaa.yml/badge.svg)](https://github.com/juergenbr/fh-clc2022-azure-example/actions/workflows/master_fh-clc3-4xn73xp6xleaa.yml)
+
 # Setup
 
 ## Requirements
@@ -7,45 +10,81 @@
 * Postman
 * GitHub Account
 
-## Local Environment Setup
-1) Extract the example .zip file into a folder on your local machine. The root of the folder should contain the REAMDE.md and pom.xml file.
-2) Open the folder in VS Code. You can either do this via File -> Open Folder.. or via command line by cd-ing into the folder and then using `code .` (Linux/Mac: if command `code` is not found, open VS Code, open the Command Palette and Execute `Shell Command: install 'code' command in PATH`)
-3) make sure Docker is running
-4) Use the Command Palette and execute `Remote-Containers: Open Folder in Container`. This should start a new Docker container in the background and open a new VS Code window with the project folder mounted. It will also ask to install a few recommended extensions. Depending on your hardware VS Code should finish loading shortly. Check the VS Code status bar at the very bottom to see if all activites were finished.
-5) now you should have a complete dev environment running inside the docker container.
+## Environment Setup
+1) fork the example respository. Link to GitHub documentation for forking a repo: https://docs.github.com/en/get-started/quickstart/fork-a-repo 
+2) check out your own fork of the example repository
+3) Open the folder in VS Code. You can either do this via File -> Open Folder.. or via command line by cd-ing into the folder and then using `code .` (Linux/Mac: if command `code` is not found, open VS Code, open the Command Palette and Execute `Shell Command: install 'code' command in PATH`)
+4) make sure Docker is running
+5) Use the Command Palette and execute `Remote-Containers: Open Folder in Container`. This should start a new Docker container in the background and open a new VS Code window with the project folder mounted. It will also ask to install a few recommended extensions. Depending on your hardware VS Code should finish loading shortly. Check the VS Code status bar at the very bottom to see if all activites were finished.
+6) now you should have a complete dev environment running inside the docker container.
 
 ## Infrastructure Deployment
-1) fork the example respository
-2) check out your own repo
-3) Open Terminal in the repo root folder
-4) execute `cd ./infrastructure`
-5) execute `az login` and log in to your Azure Free Trial account
-   You will get the following output:
-   ```
-   [
-     {
-       "cloudName": "AzureCloud",
-       "homeTenantId": "f88d4b73-6bb2-4b9a-abc7-eb96e5a6407c",
-       "id": "fb0e8e47-e203-45b3-a725-3a365ce122ba",
-       "isDefault": true,
-       "managedByTenants": [],
-       "name": "Azure for Students",
-       "state": "Enabled",
-       "tenantId": "f88d4b73-6bb2-4b9a-abc7-eb96e5a6407c",
-       "user": {
-         "name": "p61219@fhooe.at",
-         "type": "user"
-       }
-     }
-   ]
-   ```
-7) execute `az account set --subscription <"id" from the output above>`
-8) execute `az deployment sub create --template-file main.bicep --location WestEurope`
+### Preparation:
+Microsoft introduced the requirement to agree to their "Responsible AI" terms of service. Doing so requires the following steps:
+
+1) Open portal.azure.com
+2) Navigate into your subscription
+3) In the left menu, click "Access control (IAM)"
+4) Navigate to the "Role assignments" tab
+5) Click "+ Add" in the top menu and click "Add role assignment" 
+6) In the "Roles" tabs, select "Cognitive Services Contributor"
+7) In the members tab click "+ Select members", and select your user in the newly openend menu on the right of the screen and click the "Select" button
+8) Click the "Review + assign" button on the botton
+9) Click the "Review + assign" button on the botton again
+10) Now click the "Microsoft Azure" text in the topmost bar to navigate to the "Home" screen
+11) Click "Create a resource"
+12) Enter "Cognitive Services" in the search bar and press Enter
+13) Click the blue "Create" button
+14) Make sure your Student Subscription is selected if you already have several subscriptions
+15) Click "Create new" below the "Resource group" dropdown. The list should be empty if you have not created any Azure resources so far
+16) enter a name for your resource group (which name is not important since we will delte it right after creating the Cognitive Service account)
+17) In the "Region" dropdown, select "West Europe"
+18) Enter a name for the resource (again it does not matter which one since we will delete it again)
+19) Unter Pricing Tier, select "Standard S0"
+20) Check the box to acknowledge the Responsible AI terms
+21) Click "Review + create" 
+21) If validation is succesful, click "Create"
+21) Wait until creation is done
+21) Now click the "Microsoft Azure" text in the topmost bar to navigate to the "Home" screen again
+22) Click on "Resourcxe groups" under "Navigate"
+23) Select the resource group that was just created (see step 16)
+24) Click "Delete resource group" in the menu bar
+25) Make sure that the resource group only contains the custom vision service that we just created
+26) Confirm by writing the name of the resource group into the text field and click the "Delete" button.
+
+
+### Steps:
+1) Open Terminal in the repo root folder
+2) execute `cd ./infrastructure`
+3) execute `az login --use-device-code` and log in to your Azure Free Trial account
+You should see a similar output:
+```
+[
+  {
+    "cloudName": "AzureCloud",
+    "homeTenantId": "f88d4b73-6bb2-4b9a-abc7-eb96e5a6407c",
+    "id": "fb0e8e47-e203-45b3-a725-3a365ce122ba",
+    "isDefault": true,
+    "managedByTenants": [],
+    "name": "Azure for Students",
+    "state": "Enabled",
+    "tenantId": "f88d4b73-6bb2-4b9a-abc7-eb96e5a6407c",
+    "user": {
+      "name": "p61219@fhooe.at",
+      "type": "user"
+    }
+  }
+]
+```
+4) execute `az account set --subscription <id from above output>`
+5) execute `az deployment sub create --template-file main.bicep --location WestEurope`
    - The deployment will ask for the following values:
      - 'deploymentName': free choosable name for the deployment (e.g. `clc3-example`)
-     - 'rgName': name of the resource group which should be created for the deployment (e.g. `rg-clc3-example`)
+     - 'rgName': name of the resource group which should be created for the deployment(e.g. `rg-clc3-example-<lastname>`)
+     
+     **!!Important!!: use your last name as a prefix on the resource group name to avoid name colisions with other students**
      - 'location': region where the infrastructure should be created (e.g. `westeurope`)
-9) **In case the deployment fails because it could not create the role-assignments, trigger the deployment a second time using the exact same values as before. This error is caused by Azure AD having a delay in the creation of new identities, while the template assumes that they are created immediately.**
+6) **In case the deployment fails because it could not create the role-assignments, trigger the deployment a second time using the exact same values as before. This error is caused by Azure AD having a delay in the creation of new identities, while the template assumes that they are created immediately.**
 ---
 ## Function deployment
 If the above deployment worked without errors you can deploy the function code as a next step.
@@ -100,9 +139,13 @@ Before continuing, find the following information in the Azure Cognitive Service
       * Authentication Type: `Api Key` (already selected by default)
       * Account key: insert Key from the prerequisites step
       * Site URL: insert Endpoint URL from the prerequisites step
-   9. Click `Create`
-   10. Perform the same as in step 5 using the last step in the workflow.
-   11. Click `Save` in the top menu bar of the Logic App. **Do not forget this, otherwise you have to re-do all steps**
+   9. Click `Create` 
+   10. For the cosmosDB connection, you need to create a new connection as well. Choose a name and select the "Managed Identity" authentication type. The connection should look like this:
+
+   ![Image](./doc/images/cosmosdb-connection.jpg)
+
+   11. Perform the same as in step 5 using the last step in the workflow.
+   12. Click `Save` in the top menu bar of the Logic App. **Do not forget this, otherwise you have to re-do all steps**
 
 ---
 
@@ -120,6 +163,9 @@ curl --location --request POST '<Your Function URL>' \
 --header 'Cache-Control: no-cache' \
 --data-binary '@<Path to image file'
 ````
+
+## Troubleshooting
+* If you need to re-deploy the Bicep template, you need to purge the Cognitive Services manually. This can be done by navigating to the Cognitive Service in the Azure Portal (https://portal.azure.com/#view/Microsoft_Azure_ProjectOxford/CognitiveServicesHub/~/ComputerVision), select "Computer Vision" in the left-hand menu, then select "Manage deleted resources" in the top menu and then select and **Purge** all entries in the list on the right. Repeat this for the "Custom Vision" entry in the left-hand menu.
 
 ## Extra: Custom Vision
 A more advanced version of this example uses the Custom Vision service in Azure to train a custom model.

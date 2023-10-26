@@ -42,26 +42,6 @@ resource databaseAccounts_resource 'Microsoft.DocumentDB/databaseAccounts@2022-0
     ]
     cors: []
     capabilities: []
-    ipRules: [
-      {
-        ipAddressOrRange: '104.42.195.92'
-      }
-      {
-        ipAddressOrRange: '40.76.54.131'
-      }
-      {
-        ipAddressOrRange: '52.176.6.30'
-      }
-      {
-        ipAddressOrRange: '52.169.50.45'
-      }
-      {
-        ipAddressOrRange: '52.187.184.26'
-      }
-      {
-        ipAddressOrRange: '212.241.69.10'
-      }
-    ]
     backupPolicy: {
       type: 'Periodic'
       periodicModeProperties: {
@@ -168,16 +148,6 @@ resource databaseAccounts_fh_clc3_cosmosdb_name_ImageAnalysis_results 'Microsoft
         mode: 'LastWriterWins'
         conflictResolutionPath: '/_ts'
       }
-    }
-  }
-}
-
-resource databaseAccounts_fh_clc3_cosmosdb_name_ImageAnalysis_default 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/throughputSettings@2022-02-15-preview' = {
-  parent: databaseAccounts_fh_clc3_cosmosdb_name_ImageAnalysis
-  name: 'default'
-  properties: {
-    resource: {
-      throughput: 400
     }
   }
 }

@@ -14,8 +14,7 @@ resource connections_cognitiveservicescomputervision_name_resource 'Microsoft.We
         status: 'Connected'
       }
     ]
-    customParameterValues: {
-    }
+    customParameterValues: {}
     createdTime: '2022-08-15T17:38:34.6278427Z'
     changedTime: '2022-08-15T17:49:07.9456582Z'
     api: {
@@ -24,18 +23,17 @@ resource connections_cognitiveservicescomputervision_name_resource 'Microsoft.We
       description: 'Extrahieren Sie umfangreiche Informationen aus Bildern, um visuelle Daten zu kategorisieren und zu verarbeiten, und schützen Sie Ihre Benutzer mit Azure Cognitive Service vor unerwünschten Inhalten.'
       iconUri: 'https://connectoricons-prod.azureedge.net/releases/v1.0.1549/1.0.1549.2680/cognitiveservicescomputervision/icon.png'
       brandColor: '#1267AE'
-      id: '/subscriptions/c0a97786-cce2-4cf3-9f1a-022e775c19ad/providers/Microsoft.Web/locations/westeurope/managedApis/cognitiveservicescomputervision'
+      id: '${subscription().id}/providers/Microsoft.Web/locations/westeurope/managedApis/cognitiveservicescomputervision'
       type: 'Microsoft.Web/locations/managedApis'
     }
     testLinks: [
       {
-        requestUri: '${environment().resourceManager}:443/subscriptions/c0a97786-cce2-4cf3-9f1a-022e775c19ad/resourceGroups/rg-fh-clc3-example/providers/Microsoft.Web/connections/${connections_cognitiveservicescomputervision_name}/extensions/proxy/vision/v2.0/models?api-version=2016-06-01'
+        requestUri: '${environment().resourceManager}:443${subscription().id}/resourceGroups/rg-fh-clc3-example/providers/Microsoft.Web/connections/${connections_cognitiveservicescomputervision_name}/extensions/proxy/vision/v2.0/models?api-version=2016-06-01'
         method: 'get'
       }
     ]
   }
 }
-
 
 resource accounts_fhclc3excompvis_name_resource 'Microsoft.CognitiveServices/accounts@2022-03-01' = {
   name: accounts_fhclc3excompvis_name
@@ -66,7 +64,7 @@ resource customvision_training 'Microsoft.CognitiveServices/accounts@2022-03-01'
   }
   kind: 'CustomVision.Training'
   properties: {
-    customSubDomainName:accounts_fhclc3excustvis_name
+    customSubDomainName: accounts_fhclc3excustvis_name
     networkAcls: {
       defaultAction: 'Allow'
       virtualNetworkRules: []
@@ -84,7 +82,7 @@ resource customvision_prediction 'Microsoft.CognitiveServices/accounts@2022-03-0
   }
   kind: 'CustomVision.Prediction'
   properties: {
-    customSubDomainName:accounts_fhclc3excustvis_pred_name
+    customSubDomainName: accounts_fhclc3excustvis_pred_name
     networkAcls: {
       defaultAction: 'Allow'
       virtualNetworkRules: []
@@ -98,4 +96,3 @@ output connections_cognitiveservicescomputervision_name_resource_id string = con
 output cognitiveService_name string = accounts_fhclc3excompvis_name_resource.name
 output customvision_training_name string = customvision_training.name
 output customvision_prediction_name string = customvision_prediction.name
-

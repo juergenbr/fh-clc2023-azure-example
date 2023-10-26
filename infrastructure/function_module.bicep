@@ -2,7 +2,7 @@ param location string
 param storageaccount_name string
 param imagecontainer_name string
 param resultscontainer_name string
-param appInsights_name string
+//param appInsights_name string
 param contentshare_name string
 param cogService_name string
 param customVisionServicePrediction_name string
@@ -14,9 +14,11 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' existing 
   name: storageaccount_name
 }
 
+/*
 resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
   name: appInsights_name
 }
+*/
 
 resource cogService 'Microsoft.CognitiveServices/accounts@2022-03-01' existing = {
   name: cogService_name
@@ -157,23 +159,6 @@ resource sites_fh_clc3_example_name_web 'Microsoft.Web/sites/config@2022-03-01' 
     }
     localMySqlEnabled: false
     managedServiceIdentityId: 26997
-    ipSecurityRestrictions: [
-      {
-        ipAddress: '212.241.69.10/32'
-        action: 'Allow'
-        tag: 'Default'
-        priority: 100
-        name: 'Home'
-        description: 'Liwest Public IP'
-      }
-      {
-        ipAddress: 'Any'
-        action: 'Deny'
-        priority: 2147483647
-        name: 'Deny all'
-        description: 'Deny all access'
-      }
-    ]
     scmIpSecurityRestrictions: [
       {
         ipAddress: 'Any'
@@ -192,8 +177,7 @@ resource sites_fh_clc3_example_name_web 'Microsoft.Web/sites/config@2022-03-01' 
     functionAppScaleLimit: 200
     functionsRuntimeScaleMonitoringEnabled: false
     minimumElasticInstanceCount: 0
-    azureStorageAccounts: {
-    }
+    azureStorageAccounts: {}
     appSettings: [
       {
         name: 'STORAGEACCOUNT_NAME'
@@ -207,10 +191,10 @@ resource sites_fh_clc3_example_name_web 'Microsoft.Web/sites/config@2022-03-01' 
         name: 'RESULTSCONTAINERNAME'
         value: resultscontainer_name
       }
-      {
+      /*{
         name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
         value: appInsights.properties.InstrumentationKey
-      }
+      }*/
       {
         name: 'AzureWebJobsStorage'
         value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${storageAccount.listKeys().keys[0].value}'
@@ -265,7 +249,7 @@ resource sites_fh_clc3_example_name_sites_fh_clc3_example_name_azurewebsites_net
 }
 
 resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(storageaccount_name,sites_fh_clc3_example_name_resource.id)
+  name: guid(storageaccount_name, sites_fh_clc3_example_name_resource.id)
   scope: storageAccount
   properties: {
     principalId: sites_fh_clc3_example_name_resource.identity.principalId

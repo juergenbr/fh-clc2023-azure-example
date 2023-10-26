@@ -1,9 +1,13 @@
 param location string
 
 var components_fh_clc3_example_name = 'fh-clc3-example'
-var workspaces_defaultworkspace_c0a97786_cce2_4cf3_9f1a_022e775c19ad_weu_externalid = '/subscriptions/c0a97786-cce2-4cf3-9f1a-022e775c19ad/resourceGroups/defaultresourcegroup-weu/providers/microsoft.operationalinsights/workspaces/defaultworkspace-c0a97786-cce2-4cf3-9f1a-022e775c19ad-weu'
 var smartdetectoralertrules_failure_anomalies_fh_clc3_example_name = 'failure anomalies - fh-clc3-example'
 var actionGroups_Application_Insights_Smart_Detection_name = 'Application Insights Smart Detection'
+
+resource workspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
+  name: 'AppInsightsWorkspace'
+  location: location
+}
 
 resource components_fh_clc3_example_name_resource 'microsoft.insights/components@2020-02-02' = {
   name: components_fh_clc3_example_name
@@ -14,7 +18,7 @@ resource components_fh_clc3_example_name_resource 'microsoft.insights/components
     Flow_Type: 'Redfield'
     Request_Source: 'IbizaAIExtensionEnablementBlade'
     RetentionInDays: 90
-    WorkspaceResourceId: workspaces_defaultworkspace_c0a97786_cce2_4cf3_9f1a_022e775c19ad_weu_externalid
+    WorkspaceResourceId: workspace.id
     IngestionMode: 'LogAnalytics'
     publicNetworkAccessForIngestion: 'Enabled'
     publicNetworkAccessForQuery: 'Enabled'
