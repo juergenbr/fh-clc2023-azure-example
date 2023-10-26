@@ -1,6 +1,3 @@
-# fh-clc2022-azure-example
-[![Build and deploy Java project to Azure Function App - fh-clc3-4xn73xp6xleaa](https://github.com/juergenbr/fh-clc2022-azure-example/actions/workflows/master_fh-clc3-4xn73xp6xleaa.yml/badge.svg)](https://github.com/juergenbr/fh-clc2022-azure-example/actions/workflows/master_fh-clc3-4xn73xp6xleaa.yml)
-
 # Setup
 
 ## Requirements
