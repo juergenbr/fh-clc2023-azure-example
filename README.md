@@ -163,6 +163,7 @@ curl --location --request POST '<Your Function URL>' \
 
 ## Troubleshooting
 * If you need to re-deploy the Bicep template, you need to purge the Cognitive Services manually. This can be done by navigating to the Cognitive Service in the Azure Portal (https://portal.azure.com/#view/Microsoft_Azure_ProjectOxford/CognitiveServicesHub/~/ComputerVision), select "Computer Vision" in the left-hand menu, then select "Manage deleted resources" in the top menu and then select and **Purge** all entries in the list on the right. Repeat this for the "Custom Vision" entry in the left-hand menu.
+* If the GitHub action failes after starting with message "The template is not valid. .github/workflows/master_fh-clc3-4u54ddpkohngi.yml (Line: 27, Col: 15): Unexpected value 'java-version: 11", you need to manually edit the file `.github/workflows/master_fh-clc3-4u54ddpkohngi.yml` and replace the line `with: |+` with `with:` (remove the `|+`) and then re-trigger the action by pushing a new commit to your repository.
 
 ## Extra: Custom Vision
 A more advanced version of this example uses the Custom Vision service in Azure to train a custom model.
